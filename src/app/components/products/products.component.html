@@ -1,0 +1,28 @@
+<div class="continer">
+    <div class="filter"><app-filter></app-filter></div>
+    <div class="container mt-4">
+        <div class="d-flex row">
+            @for (product of products(); track product.Products_id) {
+            <div class="col-12 col-md-6 col-lg-3 mb-4 text-center rtl">
+                <p-card [style]="{ width: '17rem', overflow: 'hidden' }" (click)="goToProduct(product)">
+                    <ng-template pTemplate="header">
+                        <a [routerLink]="['/products-page', product.Products_id]" [state]="{ product: product }"> <img
+                                src="../.././../assets/images/baking/3pattrns1.jpg" class="card-img-top"
+                                [alt]="product.Product_name"></a>
+                    </ng-template>
+                    <ng-template pTemplate="title">{{ product.Product_name }}</ng-template>
+                    <ng-template pTemplate="subtitle"> ₪ {{ product.price }} </ng-template>
+                    <ng-template pTemplate="footer">
+                        <div class="flex gap-4 mt-1 m-2">
+                            <p-button label="הוספה לסל" severity="secondary" class="w-full" [outlined]="true"
+                                styleClass="w-full" (onClick)="addToBasket(product)" />
+                            <p-button label="לרכישה" class="w-full" styleClass="w-full" />
+                        </div>
+                    </ng-template>
+                </p-card>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+<app-product-form [addOrEditVal]="addOrEditVal"></app-product-form>

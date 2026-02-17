@@ -1,0 +1,38 @@
+<p-button (click)="showDialog(true)" label="הוספת מוצר" />
+<p-dialog dir="rtl" header={{addOrEditMessageSignal()}} [modal]="true" [(visible)]="showDialogSignal"
+    [style]="{ width: '25rem' }">
+    <div class="flex items-center gap-4 mb-8">
+        <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+            <div>
+                <label for="productName"> הכנס שם מוצר: </label>
+                <input class="m-2" pInputText formControlName="productName" />
+                <!-- <div *ngIf="myForm.get('productName').invalid && myForm.get('productName').touched"></div> -->
+            </div>
+            <div>
+                <label for="price"> הכנס מחיר: </label>
+                <p-inputnumber class="m-2" formControlName="price" />
+
+                <!-- <div *ngIf="myForm.get('price').invalid && myForm.get('price').touched"></div> -->
+            </div>
+            <div>
+                <label for="categoryId"> הכנס קטגוריה : </label>
+                <input class="m-2" pInputText formControlName="categoryId" />
+                <!-- <div *ngIf="myForm.get('categoryId').invalid && myForm.get('categoryId').touched"></div> -->
+            </div>
+            <div>
+                <label for="description"> הכנס תיאור מוצר : </label>
+                <input class="m-2" pInputText formControlName="description" />
+                <!-- <div *ngIf="myForm.get('description').invalid && myForm.get('description').touched"></div> -->
+            </div>
+            <div>
+                <label for="imgUrl"> הכנס נתיב תמונה : </label>
+                <input class="m-2" pInputText formControlName="imgUrl" />
+                <!-- <div *ngIf="myForm.get('imgUrl').invalid && myForm.get('imgUrl').touched"></div> -->
+            </div>
+        </form>
+    </div>
+    <div class="flex justify-end gap-2 text-start">
+        <p-button class="m-2" label="ביטול" severity="secondary" (click)="showDialog(false)" />
+        <p-button class="m-2" label="הוספת מוצר" (click)="showDialog(false)" />
+    </div>
+</p-dialog>

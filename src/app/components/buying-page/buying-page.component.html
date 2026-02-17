@@ -1,0 +1,26 @@
+<div class="all-page">
+    <div class="basket">
+        <div class="title">סל הקניות שלי</div>
+        <a [routerLink]="['/kitchen']" class="buy">המשך לקניה באתר >></a>
+    </div>
+    <div class="details">
+        <div class="title">פרטי המזמין</div>
+        <div class="inputs">
+            <input class="input-field" type="text" placeholder="שם מלא" required>
+            <input class="input-field" type="text" placeholder="רחוב" required>
+            <input class="input-field" type="text" placeholder="מספר" required>
+            <input class="input-field" type="text" placeholder="דירה" required>
+            <input class="input-field" type="text" placeholder="עיר" required>
+            <input class="input-field" type="text" placeholder="מספר טלפון" required>
+            <input class="input-field" type="text" placeholder="אימייל" required>
+        </div>
+        <div class="pay-details">
+            <div class="title">פרטי תשלום כולל משלוח</div>
+            <div class="delivery">משלוח חינם עד הבית בקניה מעל 500 ש"ח</div>
+            <select id="deliveryOption">
+                <option value="" disabled selected>בחר שיטת משלוח*</option>
+                <option value="standard">משלוח עד הבית</option>
+                <option value="express">איסוף מהחנות</option>
+            </select>
+        </div>
+    </div>

@@ -1,0 +1,42 @@
+.allBranches{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.branch-card{
+    width: 300px;
+    margin: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .branch-info {
+        padding: 15px;
+
+        h3 {
+            margin: 0 0 10px;
+            font-size: 1.25rem;
+            color: #333;
+        }
+
+        p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    }
+}

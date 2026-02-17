@@ -1,0 +1,23 @@
+<div class="all">
+  <div class="header-container">
+    <div class="top-bar">
+      <div class="icons-section">
+        <i class="pi pi-heart" pBadge severity="secondary"></i>
+        <a routerLink="/basket"><i class="pi pi-shopping-cart" pBadge severity="secondary"></i></a>
+        <i class="pi pi-user" pBadge severity="secondary"></i>
+      </div>
+
+      <div class="logo-section">
+        <img src="../../../assets/images/foodApeal.png" alt="Food Appeal" height="60">
+      </div>
+
+      <div class="search-section">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input type="text" pInputText placeholder="הכנס מילות חיפוש" />
+        </span>
+      </div>
+    </div>
+    <p-menubar [model]="items" class="main-menu"></p-menubar>
+  </div>
+</div>

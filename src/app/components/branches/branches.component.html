@@ -1,0 +1,9 @@
+<div class="allBranches">
+    <div class="branch-card" *ngFor="let branch of branches" (click)="goToBranch(branch)">
+        <img [src]="branch.imgUrl" [alt]="branch.name" />
+        <h3>{{ branch.name }}</h3>
+        <p>{{ branch.address }}, {{ branch.city }}</p>
+        <p *ngIf="branch.phone">📞 {{ branch.phone }}</p>
+        <p *ngIf="branch.openingHours">🕐 {{ branch.openingHours }}</p>
+    </div>
+</div>
