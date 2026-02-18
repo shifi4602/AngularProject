@@ -4,6 +4,7 @@ export class Product {
     Product_name!: string;
     price!: number;
     Category_Id!: number;
-    Description!: string;
+    description!: string;
     imageUrl!: string;
+    category?: string;
 }

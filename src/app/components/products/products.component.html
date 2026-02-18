@@ -1,8 +1,12 @@
 <div class="continer">
-    <div class="filter"><app-filter></app-filter></div>
+    <div class="filter">
+        <div class="filter">
+            <app-filter (filterChanged)="onFilterChanged($event)"></app-filter>
+        </div>
+    </div>
     <div class="container mt-4">
         <div class="d-flex row">
-            @for (product of products(); track product.Products_id) {
+            @for (product of filteredProducts; track product.Products_id){
             <div class="col-12 col-md-6 col-lg-3 mb-4 text-center rtl">
                 <p-card [style]="{ width: '17rem', overflow: 'hidden' }" (click)="goToProduct(product)">
                     <ng-template pTemplate="header">
@@ -25,4 +29,4 @@
         </div>
     </div>
 </div>
-<app-product-form [addOrEditVal]="addOrEditVal"></app-product-form>
+<!-- <app-product-form [addOrEditVal]="addOrEditVal"></app-product-form> -->

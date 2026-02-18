@@ -17,7 +17,7 @@ export class ProductsService {
       Product_name: `מוצר ${i + 1}`,
       price: Math.floor(Math.random() * 500) + 50,
       Category_Id: (i % 5) + 1,
-      Description: `זהו תיאור קצר עבור מוצר מספר ${i + 1}`,
+      description: `זהו תיאור קצר עבור מוצר מספר ${i + 1}`,
       imageUrl: `assets/images/baking/3pattrns1.jpg` // נתיב תמונה לדוגמה
     }));
     this.productsSignal.set(dummyProducts);
@@ -58,7 +58,7 @@ export class ProductsService {
 
     if (description) {
       const q = description.toLowerCase();
-      result = result.filter(p => (p.Description || '').toLowerCase().includes(q));
+      result = result.filter(p => (p.description || '').toLowerCase().includes(q));
     }
 
     if (name) {

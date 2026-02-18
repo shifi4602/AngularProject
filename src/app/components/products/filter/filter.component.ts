@@ -9,14 +9,38 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './filter.component.scss'
 })
 export class FilterComponent {
+
   @Output() filterChanged = new EventEmitter<any>();
 
   filterForm: FormGroup;
 
+  ngOnInit() {
+    this.filterForm.valueChanges.subscribe(value => {
+      this.filterChanged.emit(value);
+    });
+  }
+
   constructor(private fb: FormBuilder) {
     this.filterForm = this.fb.group({
-      maxPrice: [250]
+      name: [''],
+      description: [''],
+      maxPrice: [250],
+      categories: this.fb.array([])   // 👈 important
     });
+  }
+
+  get categoriesFormArray() {
+    return this.filterForm.get('categories') as any;
+  }
+
+  onCategoryChange(event: any) {
+    if (event.target.checked) {
+      this.categoriesFormArray.push(this.fb.control(event.target.value));
+    } else {
+      const index = this.categoriesFormArray.controls
+        .findIndex((x: any) => x.value === event.target.value);
+      this.categoriesFormArray.removeAt(index);
+    }
   }
 
   apply() {
@@ -24,9 +48,30 @@ export class FilterComponent {
   }
 
   clear() {
-    this.filterForm.patchValue({ maxPrice: 250 });
+    this.filterForm.reset({
+      name: '',
+      description: '',
+      maxPrice: 250,
+      categories: []
+    });
+
     this.filterChanged.emit(this.filterForm.value);
   }
+
+
+  categoriesList: string[] = [
+    'סירים',
+    'אפיה',
+    'אירוח',
+    'הגשה',
+    'סכינים',
+    'פחים',
+    'מוצרי חשמל',
+    'אחסון',
+    'ארגון'
+  ];
+
+
 }
 
 

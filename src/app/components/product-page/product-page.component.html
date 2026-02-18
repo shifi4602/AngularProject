@@ -35,7 +35,7 @@
             <ng-template #subtitle>
                 <div class="price"> {{product?.price| currency:'ILS':'symbol':'1.2-2' }}</div>
             </ng-template>
-            <div class="description">{{product?.Description}}</div>
+            <div class="description">{{product?.description}}</div>
             <div class="quantity-wrapper">
                 <p-inputnumber [(ngModel)]="quantity" [showButtons]="true" buttonLayout="horizontal" [min]="1" [max]="99"
                     inputId="vertical" [inputStyle]="{ width: '1rem' }" class="input-number">

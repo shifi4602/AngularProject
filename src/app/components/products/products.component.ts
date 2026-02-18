@@ -25,12 +25,57 @@ export class ProductsComponent implements OnInit {
 
   private productService = inject(ProductsService);
   private basketService = inject(BasketServiceService);
-  products = this.productService.getProducts();
+  //products = this.productService.getProducts();
   addOrEditVal: addOrEdit = 0;
-  constructor() {
-  }
-  ngOnInit(): void {
+
+
+  allProducts = this.productService.getProducts();
+  filteredProducts: Product[] = [];
+
+  ngOnInit() {
+    this.filteredProducts = [...this.allProducts()];
     console.log("in");
+  }
+
+
+  onFilterChanged(filter: any) {
+
+    const isEmpty =
+      !filter.name &&
+      !filter.description &&
+      (!filter.categories || filter.categories.length === 0) &&
+      filter.maxPrice === 250;
+
+    if (isEmpty) {
+      this.resetProducts();
+      return;
+    }
+
+    const originalProducts = this.allProducts();
+
+    this.filteredProducts = originalProducts.filter(product => {
+      const searchName = (filter.name || '').toLowerCase().trim();
+      const searchDescription = (filter.description || '').toLowerCase().trim();
+      const categories = filter.categories || [];
+
+      const productName = (product.Product_name || '').toLowerCase();
+      const productDescription = (product.description || '').toLowerCase();
+
+      return (
+        (searchName === '' || productName.includes(searchName)) &&
+        (searchDescription === '' || productDescription.includes(searchDescription)) &&
+        product.price <= filter.maxPrice &&
+        (categories.length === 0 || categories.includes(product.category))
+      );
+    });
+  }
+
+
+  resetProducts() {
+    this.filteredProducts = [...this.allProducts()];
+  }
+
+  constructor() {
   }
 
   addToBasket(product: Product) {
