@@ -7,4 +7,5 @@ export class Product {
     description!: string;
     imageUrl!: string;
     category?: string;
+    quantity?: number; // לא חובה, רק אם רוצים לעקוב אחרי כמות במוצר
 }

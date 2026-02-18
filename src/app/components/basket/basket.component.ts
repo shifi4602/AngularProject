@@ -35,4 +35,15 @@ export class BasketComponent implements OnInit {
     this.basketService.clearBasket();
     this.refresh();
   }
+
+  increase(item: Product) {
+    this.basketService.increase(item);
+    this.refresh();
+  }
+
+  decrease(item: Product) {
+    this.basketService.decrease(item);
+    this.refresh();
+  }
+
 }
