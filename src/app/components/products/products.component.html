@@ -18,8 +18,8 @@
                     <ng-template pTemplate="subtitle"> ₪ {{ product.price }} </ng-template>
                     <ng-template pTemplate="footer">
                         <div class="flex gap-4 mt-1 m-2">
-                            <p-button label="הוספה לסל" severity="secondary" class="w-full" [outlined]="true"
-                                styleClass="w-full" (onClick)="addToBasket(product)" />
+                            <a [routerLink]="['/basket']"><p-button label="הוספה לסל" severity="secondary" class="w-full" [outlined]="true"
+                                styleClass="w-full" (onClick)="addToBasket(product)" /></a>
                             <p-button label="לרכישה" class="w-full" styleClass="w-full" />
                         </div>
                     </ng-template>

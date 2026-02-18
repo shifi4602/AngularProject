@@ -38,8 +38,11 @@ export class ProductsComponent implements OnInit {
   }
 
 
-  onFilterChanged(filter: any) {
+  refresh() {
+    this.filteredProducts = [...this.allProducts()];
+  }
 
+  onFilterChanged(filter: any) {
     const isEmpty =
       !filter.name &&
       !filter.description &&
@@ -47,6 +50,7 @@ export class ProductsComponent implements OnInit {
       filter.maxPrice === 250;
 
     if (isEmpty) {
+      this.ngOnInit();
       this.resetProducts();
       return;
     }

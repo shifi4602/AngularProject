@@ -6,20 +6,6 @@
     padding-top: 2vh;
 }
 
-.p-button {
-    background-color: rgb(187, 73, 73);
-    border: none;
-    color: white;
-    padding: 0.5rem 1rem;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-        background-color: black;
-    }
+.p-button{
+    background-color: rosybrown;
 }
