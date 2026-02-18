@@ -47,7 +47,9 @@
                     </ng-template>
                 </p-inputnumber>
             </div>
-            <p-button label="Add To Cart" icon="pi pi-cart-arrow-down" iconPos="right" size="large" class="cart" />
+            <a routerLink="/basket">
+                <p-button label="Add To Cart" icon="pi pi-cart-arrow-down" iconPos="right" size="large" class="cart" (onClick)="addToBasket(product?.Products_id!)"/>
+            </a >
         </p-card>
     </div>
 </div>

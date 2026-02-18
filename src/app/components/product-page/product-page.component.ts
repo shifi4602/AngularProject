@@ -12,6 +12,7 @@ import { Product } from '../../models/products.model';
 import { ProductsService } from '../../service/products.service';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
+import { BasketServiceService } from '../../service/basket-service.service';
 
 @Component({
   selector: 'app-product-page',
@@ -23,7 +24,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ProductPageComponent {
 
   private productsService = inject(ProductsService);
-
+  private basketService = inject(BasketServiceService);
   private route = inject(ActivatedRoute);
 
   product?: Product;
@@ -37,4 +38,14 @@ export class ProductPageComponent {
 
     console.log(this.product);
   }
+
+  addToBasket(id: number) {
+    this.product = this.productsService.getProducts()()
+      .find(p => p.Products_id === id);
+    this.basketService.addProductTBasket(this.product!);
+    
+    // optional: simple feedback
+    console.log('added to basket', this.product?.Product_name);
+  }
+
 }
