@@ -1,4 +1,4 @@
-<div class="sidebar">
+<form class="sidebar" [formGroup]="filterForm">
 
     <div class="price-section">
         <label>לפי מחיר:</label>
@@ -12,8 +12,8 @@
     </div>
 
     <div class="buttons">
-        <button class="clear-btn" (click)="clear()">נקה</button>
-        <button class="filter-btn" (click)="apply()">סנן</button>
+        <button class="clear-btn" type="button" (click)="clear()">נקה</button>
+        <button class="filter-btn" type="button" (click)="apply()">סנן</button>
     </div>
 
     <div class="section-title">
@@ -29,12 +29,11 @@
     <!-- Description -->
     <div>
         <label>תיאור</label>
-        <input class="inputTxt" type="text" formControlName="description"/>
+        <input class="inputTxt" type="text" formControlName="description" />
     </div>
 
     <!-- Categories -->
-    <div class="sidebar" [formGroup]="filterForm">
-
+    <div>
         <label>קטגוריות</label>
 
         @for (category of categoriesList; track category) {
@@ -44,4 +43,5 @@
         </div>
         }
     </div>
-</div>
+
+</form>

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormArray, FormControl } from '@angular/forms';
+import { CATEGORIES } from '../../../models/categories.const';
 
 @Component({
   selector: 'app-filter',
@@ -30,7 +31,7 @@ export class FilterComponent {
   }
 
   get categoriesFormArray() {
-    return this.filterForm.get('categories') as any;
+    return this.filterForm.get('categories') as FormArray;
   }
 
   onCategoryChange(event: any) {
@@ -60,15 +61,7 @@ export class FilterComponent {
 
 
   categoriesList: string[] = [
-    'סירים',
-    'אפיה',
-    'אירוח',
-    'הגשה',
-    'סכינים',
-    'פחים',
-    'מוצרי חשמל',
-    'אחסון',
-    'ארגון'
+    ...CATEGORIES
   ];
 
 

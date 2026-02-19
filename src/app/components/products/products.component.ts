@@ -11,6 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 import { BasketServiceService } from '../../service/basket-service.service';
 import { Product } from '../../models/products.model';
 import { FilterComponent } from './filter/filter.component';
+import { CATEGORIES } from '../../models/categories.const';
 
 
 
@@ -47,7 +48,7 @@ export class ProductsComponent implements OnInit {
       !filter.name &&
       !filter.description &&
       (!filter.categories || filter.categories.length === 0) &&
-      filter.maxPrice === 250;
+      (filter.maxPrice === undefined || filter.maxPrice === 250);
 
     if (isEmpty) {
       this.ngOnInit();
@@ -65,11 +66,15 @@ export class ProductsComponent implements OnInit {
       const productName = (product.Product_name || '').toLowerCase();
       const productDescription = (product.description || '').toLowerCase();
 
+      const productCategoryName = product.category || CATEGORIES[(product.Category_Id ?? 1) - 1];
+
+      const matchesCategory = categories.length === 0 || categories.includes(productCategoryName);
+
       return (
         (searchName === '' || productName.includes(searchName)) &&
         (searchDescription === '' || productDescription.includes(searchDescription)) &&
-        product.price <= filter.maxPrice &&
-        (categories.length === 0 || categories.includes(product.category))
+        (filter.maxPrice == null || product.price <= filter.maxPrice) &&
+        matchesCategory
       );
     });
   }

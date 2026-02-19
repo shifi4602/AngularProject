@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Product } from '../models/products.model';
+import { CATEGORIES } from '../models/categories.const';
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +13,18 @@ export class ProductsService {
   }
 
   private loadProducts() {
-    const dummyProducts: Product[] = Array.from({ length: 20 }, (_, i) => ({
-      Products_id: i + 1,
-      Product_name: `מוצר ${i + 1}`,
-      price: Math.floor(Math.random() * 500) + 50,
-      Category_Id: (i % 5) + 1,
-      description: `זהו תיאור קצר עבור מוצר מספר ${i + 1}`,
-      imageUrl: `assets/images/baking/3pattrns1.jpg` // נתיב תמונה לדוגמה
-    }));
+    const dummyProducts: Product[] = Array.from({ length: 20 }, (_, i) => {
+      const categoryIndex = i % CATEGORIES.length;
+      return {
+        Products_id: i + 1,
+        Product_name: `מוצר ${i + 1}`,
+        price: Math.floor(Math.random() * 500) + 50,
+        Category_Id: categoryIndex + 1,
+        description: `זהו תיאור קצר עבור מוצר מספר ${i + 1}`,
+        imageUrl: `assets/images/baking/3pattrns1.jpg`, // נתיב תמונה לדוגמה
+        category: CATEGORIES[categoryIndex]
+      } as Product;
+    });
     this.productsSignal.set(dummyProducts);
   }
 

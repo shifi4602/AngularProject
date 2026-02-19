@@ -28,7 +28,7 @@ export class HeaderComponent {
   ngOnInit() {
     this.items = [
       { label: 'דף הבית', routerLink: '/' },
-      { label: 'בישול', routerLink: '/' },
+      { label: 'בישול', routerLink: '/cook' },
       { label: 'אפייה', routerLink: 'products' },
       { label: 'אירוח והגשה', routerLink: 'hosting-and-srving' },
       { label: 'אביזרי מטבח', routerLink: 'kitchen' },
