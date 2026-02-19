@@ -1,0 +1,61 @@
+.pay-card{
+  max-width: 400px;
+  margin: 1rem auto;
+  padding: 1rem;
+}
+
+.fields{
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+.fields label{
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+  margin-top: 0.3rem;
+}
+
+.fields input, .fields ::ng-deep .p-dropdown {
+  height: 36px;
+  font-size: 0.9rem;
+}
+
+.fields ::ng-deep .p-inputtext {
+  padding: 0.4rem 0.6rem;
+}
+
+.fields ::ng-deep .p-dropdown {
+  height: 36px;
+}
+
+.fields ::ng-deep .p-dropdown .p-dropdown-label {
+  padding: 0.4rem 0.6rem;
+}
+
+.total-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.actions{
+  display: flex;
+  gap: 0.5rem;
+}
+
+.p-button-secondary{
+  background-color: transparent;
+  color: #b7a27a;
+  border-radius: 3px;
+}
+
+.title{
+  font-size: 1.4rem;
+  font-weight: 700;
+}

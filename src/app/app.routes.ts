@@ -13,6 +13,7 @@ import { HomeComponent } from './components/home/home.component';
 import { BasketComponent } from './components/basket/basket.component';
 import { ProductPageComponent } from './components/product-page/product-page.component';
 import { CookComponent } from './components/cook/cook.component';
+import { PayComponent } from './components/pay/pay.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -28,5 +29,6 @@ export const routes: Routes = [
     { path: 'branches', component: BranchesComponent },
     { path: 'products-page/:id', component: ProductPageComponent },
     {path: 'cook', component: CookComponent},
+    { path: 'pay', component: PayComponent },
     { path: '**', redirectTo: '' }
 ];
