@@ -1,0 +1,27 @@
+<div class="continer">
+    <p-card class="login-card">
+        <ng-template #title>
+            <div class="title">Login</div>
+        </ng-template>
+
+        <form (ngSubmit)="login()" class="fields">
+            <label for="username">Username</label>
+            <input pInputText type="text" id="username" [(ngModel)]="username" name="username"
+                placeholder="Enter your username" required />
+
+            <label for="email">Email</label>
+            <input pInputText type="email" id="email" [(ngModel)]="email" name="email"
+                placeholder="Enter your email" required />
+
+            <div class="actions">
+                <button pButton type="submit" label="Login" class="p-button-success"></button>
+                <a routerLink="/">
+                    <button pButton type="button" label="Back to Home" class="p-button-secondary"></button>
+                </a>
+                <a routerLink="/auth">
+                    <button pButton type="button" label="בחזרה למסך הקודם" class="p-button-secondary"></button>
+                </a>
+            </div>
+        </form>
+    </p-card>
+</div>

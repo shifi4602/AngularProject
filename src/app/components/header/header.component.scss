@@ -55,6 +55,34 @@
     padding: 0;
   } 
 
+  .auth{
+    width: 140px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #b7a27a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    //font-weight: bold;
+    font-size: 1rem;
+    list-style: none;
+    text-decoration: none;
+  }
+  // .user-name{
+  //   font-size: 1.2rem;
+  //   font-weight: 600;
+  //   color: #b7a27a;
+  //   width: 150px;
+  //   height: 40px;
+  //   border-radius: 8px;
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  //   //background-color: #f5f5f5;
+  //   border: #b7a27a 1px solid;
+  // }
+
   :host ::v-deep .main-menu {
     .p-menubar {
       justify-content: center;
