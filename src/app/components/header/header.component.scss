@@ -69,19 +69,19 @@
     list-style: none;
     text-decoration: none;
   }
-  // .user-name{
-  //   font-size: 1.2rem;
-  //   font-weight: 600;
-  //   color: #b7a27a;
-  //   width: 150px;
-  //   height: 40px;
-  //   border-radius: 8px;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  //   //background-color: #f5f5f5;
-  //   border: #b7a27a 1px solid;
-  // }
+  .user-name{
+    font-size: 1rem;
+    font-weight: 600;
+    color: #b7a27a;
+    min-height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    border: #b7a27a 1px solid;
+    white-space: nowrap;
+  }
 
   :host ::v-deep .main-menu {
     .p-menubar {

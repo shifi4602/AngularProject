@@ -19,10 +19,10 @@ export class ProductsService {
         Products_id: i + 1,
         Product_name: `מוצר ${i + 1}`,
         price: Math.floor(Math.random() * 500) + 50,
-        Category_Id: categoryIndex + 1,
+        category_Id: categoryIndex + 1,
         description: `זהו תיאור קצר עבור מוצר מספר ${i + 1}`,
         imageUrl: `assets/images/baking/3pattrns1.jpg`, // נתיב תמונה לדוגמה
-        category: CATEGORIES[categoryIndex]
+        category_name: CATEGORIES[categoryIndex]
       } as Product;
     });
     this.productsSignal.set(dummyProducts);
@@ -83,7 +83,7 @@ export class ProductsService {
     }
 
     if (categories && categories.length) {
-      result = result.filter(p => categories.includes(p.Category_Id));
+      result = result.filter(p => categories.includes(p.category_Id));
     }
 
     if (orderBy) {

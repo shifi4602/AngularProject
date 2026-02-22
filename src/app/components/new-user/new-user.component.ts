@@ -22,12 +22,17 @@ export class NewUserComponent {
   firstName: string = '';
   lastName: string = '';
   email: string = '';
+  isAdmin: boolean = false;
+  password: string = '';
 
   register() {
     const newUser = {
       firstName: this.firstName,
       lastName: this.lastName,
-      email: this.email
+      email: this.email,
+      isAdmin: this.isAdmin,
+      password: this.password,
+      orders: []
     };
 
     try {
@@ -38,6 +43,7 @@ export class NewUserComponent {
       this.firstName = '';
       this.lastName = '';
       this.email = '';
+      this.isAdmin = false;
 
       alert('Registration successful!');
       this.router.navigate(['/']);

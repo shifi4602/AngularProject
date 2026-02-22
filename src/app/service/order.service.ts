@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Order } from '../models/order.model';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,8 +8,14 @@ import { Order } from '../models/order.model';
 export class OrderService {
   private ordersSignal = signal<Order[]>([]);
 
-  constructor() {
+  constructor(private userService: UserService) {
     this.loadDummyOrders();
+  }
+
+  private getNextOrderId(): number {
+    const ids = this.ordersSignal().map(order => order.orderId ?? 0);
+    const maxId = ids.length ? Math.max(...ids) : 0;
+    return maxId + 1;
   }
 
   private loadDummyOrders() {
@@ -31,6 +38,25 @@ export class OrderService {
 
   // Add a new order
   addOrder(order: Order): void {
-    this.ordersSignal.update(list => [...list, order]);
+    const currentUser = this.userService.getCurrentUser()();
+
+    if (!currentUser) {
+      throw new Error('User must be logged in to place an order.');
+    }
+
+    if (!currentUser.userId || currentUser.userId <= 0) {
+      throw new Error('Current user has an invalid user ID.');
+    }
+
+    const newOrder: Order = {
+      ...order,
+      orderId: order.orderId && order.orderId > 0 ? order.orderId : this.getNextOrderId(),
+      userId: currentUser.userId,
+      date: order.date ? new Date(order.date) : new Date(),
+      status: order.status || 'Placed'
+    };
+
+    this.ordersSignal.update(list => [...list, newOrder]);
+    this.userService.addOrderToUser(currentUser.userId, newOrder);
   }
 }

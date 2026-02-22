@@ -6,4 +6,5 @@ export class Order {
     items: OrderItem[] = [];
     date: Date = new Date();
     userId: number = 0;
+    status: string = '';
 }

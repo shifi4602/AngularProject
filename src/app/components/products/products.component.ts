@@ -66,7 +66,7 @@ export class ProductsComponent implements OnInit {
       const productName = (product.Product_name || '').toLowerCase();
       const productDescription = (product.description || '').toLowerCase();
 
-      const productCategoryName = product.category || CATEGORIES[(product.Category_Id ?? 1) - 1];
+      const productCategoryName = product.category_name || CATEGORIES[(product.category_Id ?? 1) - 1];
 
       const matchesCategory = categories.length === 0 || categories.includes(productCategoryName);
 

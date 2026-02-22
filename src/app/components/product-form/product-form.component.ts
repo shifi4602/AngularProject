@@ -70,7 +70,7 @@ export class ProductFormComponent implements OnInit {
       this.myForm.patchValue({
         productName: this.productToEdit.Product_name,
         price: this.productToEdit.price,
-        categoryId: this.productToEdit.Category_Id,
+        categoryId: this.productToEdit.category_Id,
         description: this.productToEdit.description,
         imgUrl: this.productToEdit.imageUrl
       });
@@ -83,10 +83,10 @@ export class ProductFormComponent implements OnInit {
         ...this.productToEdit,
         Product_name: this.myForm.get('productName')?.value,
         price: this.myForm.get('price')?.value,
-        Category_Id: this.myForm.get('categoryId')?.value,
+        category_Id: this.myForm.get('categoryId')?.value,
         description: this.myForm.get('description')?.value,
         imageUrl: this.myForm.get('imgUrl')?.value,
-        category: CATEGORIES[this.myForm.get('categoryId')?.value - 1]
+        category_name: CATEGORIES[this.myForm.get('categoryId')?.value - 1]
       };
 
       this.productsService.updateProduct(updatedProduct);
@@ -102,10 +102,11 @@ export class ProductFormComponent implements OnInit {
     newProduct.Products_id = products.length > 0 ? Math.max(...products.map(p => p.Products_id)) + 1 : 1;
     newProduct.Product_name = this.myForm.get('productName')?.value;
     newProduct.price = this.myForm.get('price')?.value;
-    newProduct.Category_Id = this.myForm.get('categoryId')?.value;
+    newProduct.category_Id = this.myForm.get('categoryId')?.value;
     newProduct.description = this.myForm.get('description')?.value;
     newProduct.imageUrl = this.myForm.get('imgUrl')?.value;
-    newProduct.category = CATEGORIES[newProduct.Category_Id - 1];
+    newProduct.category_name = CATEGORIES[newProduct.category_Id - 1];
+    newProduct.isAvailable = true;
 
     this.productsService.addProduct(newProduct);
     this.myForm.reset();
