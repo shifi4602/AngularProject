@@ -13,10 +13,12 @@
 
       <div class="search-section">
         <span class="p-input-icon-left">
-          <a routerLink="/auth"><div class="auth">לחיבור / הרשמה</div></a>
-          <div class="user-name"></div>
+          <a *ngIf="!currentUser()" routerLink="/auth"><div class="auth">לחיבור / הרשמה</div></a>
+          <div class="user-name" *ngIf="currentUser() as user">שלום, {{ user.firstName }} {{ user.lastName }}</div>
           <!--<i class="pi pi-search"></i>-->
           <!--<input type="text" pInputText placeholder="הכנס מילות חיפוש" />-->
+          <div class="ttt"><a routerLink="/product-form">add product</a></div>
+          <a routerLink="/product-edit/5">edit product</a>
         </span>
       </div>
     </div>

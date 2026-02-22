@@ -1,38 +1,59 @@
-<p-button (click)="showDialog(true)" label="הוספת מוצר" />
-<p-dialog dir="rtl" header={{addOrEditMessageSignal()}} [modal]="true" [(visible)]="showDialogSignal"
-    [style]="{ width: '25rem' }">
-    <div class="flex items-center gap-4 mb-8">
-        <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-            <div>
-                <label for="productName"> הכנס שם מוצר: </label>
-                <input class="m-2" pInputText formControlName="productName" />
-                <!-- <div *ngIf="myForm.get('productName').invalid && myForm.get('productName').touched"></div> -->
-            </div>
-            <div>
-                <label for="price"> הכנס מחיר: </label>
-                <p-inputnumber class="m-2" formControlName="price" />
+<div class="container">
+    <section class="product-form" dir="rtl">
+        <div class="product-form-card">
+            <h1>{{addOrEditMessageSignal()}}</h1>
+            <p class="subtitle">מלא את הפרטים להוספת מוצר חדש</p>
 
-                <!-- <div *ngIf="myForm.get('price').invalid && myForm.get('price').touched"></div> -->
-            </div>
-            <div>
-                <label for="categoryId"> הכנס קטגוריה : </label>
-                <input class="m-2" pInputText formControlName="categoryId" />
-                <!-- <div *ngIf="myForm.get('categoryId').invalid && myForm.get('categoryId').touched"></div> -->
-            </div>
-            <div>
-                <label for="description"> הכנס תיאור מוצר : </label>
-                <input class="m-2" pInputText formControlName="description" />
-                <!-- <div *ngIf="myForm.get('description').invalid && myForm.get('description').touched"></div> -->
-            </div>
-            <div>
-                <label for="imgUrl"> הכנס נתיב תמונה : </label>
-                <input class="m-2" pInputText formControlName="imgUrl" />
-                <!-- <div *ngIf="myForm.get('imgUrl').invalid && myForm.get('imgUrl').touched"></div> -->
-            </div>
-        </form>
-    </div>
-    <div class="flex justify-end gap-2 text-start">
-        <p-button class="m-2" label="ביטול" severity="secondary" (click)="showDialog(false)" />
-        <p-button class="m-2" label="הוספת מוצר" (click)="showDialog(false)" />
-    </div>
-</p-dialog>
+            <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+                <div class="form-field">
+                    <label for="productName">שם מוצר</label>
+                    <input id="productName" pInputText formControlName="productName" placeholder="הזן שם מוצר" />
+                    <div *ngIf="myForm.get('productName')?.invalid && myForm.get('productName')?.touched" class="error-message">
+                        שדה חובה
+                    </div>
+                </div>
+                
+                <div class="form-field">
+                    <label for="price">מחיר</label>
+                    <p-inputnumber id="price" formControlName="price" mode="currency" currency="ILS" locale="he-IL" 
+                        placeholder="הזן מחיר" styleClass="w-full" />
+                    <div *ngIf="myForm.get('price')?.invalid && myForm.get('price')?.touched" class="error-message">
+                        שדה חובה, מחיר חייב להיות חיובי
+                    </div>
+                </div>
+                
+                <div class="form-field">
+                    <label for="categoryId">קטגוריה</label>
+                    <p-dropdown id="categoryId" formControlName="categoryId" [options]="categories" 
+                        optionLabel="label" optionValue="value" placeholder="בחר קטגוריה" styleClass="w-full" />
+                    <div *ngIf="myForm.get('categoryId')?.invalid && myForm.get('categoryId')?.touched" class="error-message">
+                        שדה חובה
+                    </div>
+                </div>
+                
+                <div class="form-field">
+                    <label for="description">תיאור מוצר</label>
+                    <input id="description" pInputText formControlName="description" placeholder="הזן תיאור" />
+                    <div *ngIf="myForm.get('description')?.invalid && myForm.get('description')?.touched" class="error-message">
+                        שדה חובה
+                    </div>
+                </div>
+                
+                <div class="form-field">
+                    <label for="imgUrl">נתיב תמונה</label>
+                    <input id="imgUrl" pInputText formControlName="imgUrl" placeholder="הזן נתיב תמונה" />
+                    <div *ngIf="myForm.get('imgUrl')?.invalid && myForm.get('imgUrl')?.touched" class="error-message">
+                        שדה חובה
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+                
+                <div class="button-group">
+                    <button type="submit" class="primary-btn" [disabled]="myForm.invalid">שמור מוצר</button>
+                    <button type="button" class="secondary-btn" (click)="resetForm()">נקה טופס</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>

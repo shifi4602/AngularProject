@@ -6,11 +6,13 @@ import { ButtonModule } from 'primeng/button';
 import { MenuItem } from 'primeng/api';
 import { ImageModule } from 'primeng/image';
 import { CommonModule } from '@angular/common';
+import { inject } from '@angular/core';
 import { ProductsComponent } from '../products/products.component';
 import { ProductPageComponent } from '../product-page/product-page.component';
 import { HomeComponent } from '../home/home.component';
 import { GiftsComponent } from '../gifts/gifts.component';
 import { RouterLink, RouterModule } from '@angular/router';
+import { UserService } from '../../service/user.service';
 
 
 
@@ -22,6 +24,8 @@ import { RouterLink, RouterModule } from '@angular/router';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  private userService = inject(UserService);
+  currentUser = this.userService.getCurrentUser();
 
   items: MenuItem[] | undefined;
 

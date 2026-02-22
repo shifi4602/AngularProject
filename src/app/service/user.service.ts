@@ -9,6 +9,7 @@ import { ExistingUser } from '../models/existing-user.model';
 
 export class UserService {
   private usersSignal = signal<User[]>([]);
+  private currentUserSignal = signal<User | null>(null);
 
   constructor() {
     this.loadDummyUsers();
@@ -16,8 +17,8 @@ export class UserService {
 
   private loadDummyUsers() {
     const dummy: User[] = [
-      { userId: 1, firstName: 'Shlomo', lastName: 'Cohen', email: 'shlomo@example.com' },
-      { userId: 2, firstName: 'Maya', lastName: 'Levi', email: 'maya@example.com' }
+      { firstName: 'Shlomo', lastName: 'Cohen', email: 'shlomo@example.com' },
+      { firstName: 'Maya', lastName: 'Levi', email: 'maya@example.com' }
     ];
     this.usersSignal.set(dummy);
   }
@@ -27,20 +28,29 @@ export class UserService {
     return this.usersSignal.asReadonly();
   }
 
-  // Find a user by id
-  getUserById(id: number): User | undefined {
-    return this.usersSignal().find(u => u.userId === id);
+  getCurrentUser() {
+    return this.currentUserSignal.asReadonly();
   }
+
+  // Find a user by id
+  // getUserById(id: number): User | undefined {
+  //   return this.usersSignal().find(u => u.userId === id);
+  // }
 
   // Add a new user
   addUser(user: User): void {
     this.usersSignal.update(list => [...list, user]);
   }
 
-  // Login by matching an existing user object (userId + email)
+  setCurrentUser(user: User | null): void {
+    this.currentUserSignal.set(user);
+  }
+
+  // Login by matching an existing user object (firstName + email)
   // Returns the matched User or null if not found
-  loginUser(existing: ExistingUser): User | null {
-    const user = this.usersSignal().find(u => u.userId === existing.userId && u.email === existing.email);
+  loginUser(username: string, email: string): User | null {
+    const user = this.usersSignal().find(u => u.firstName === username && u.email === email);
+    this.currentUserSignal.set(user ?? null);
     return user ?? null;
   }
 }

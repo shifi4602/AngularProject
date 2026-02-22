@@ -1,67 +1,114 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, NgModule, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { DialogModule } from 'primeng/dialog';
+import { Component, Input, OnInit, signal } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { addOrEdit } from '../../models/addOrEditEnum.model';
 import { Product } from '../../models/products.model';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ProductsService } from '../../service/products.service';
+import { CATEGORIES } from '../../models/categories.const';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [CardModule, ButtonModule, DialogModule, CommonModule, FormsModule, DialogModule, InputTextModule, ReactiveFormsModule, InputNumberModule],
+  imports: [CommonModule, InputTextModule, ReactiveFormsModule, InputNumberModule, DropdownModule],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss'
 })
 export class ProductFormComponent implements OnInit {
 
-  @Input() addOrEditVal!: addOrEdit;
+  @Input() addOrEditVal: addOrEdit = addOrEdit.add;
+  @Input() productToEdit?: Product;
   myForm: FormGroup;
+  categories = CATEGORIES.map((cat, index) => ({ label: cat, value: index + 1 }));
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private productsService: ProductsService) {
     this.myForm = this.fb.group({
       productName: ['', Validators.required],
-      price: ['', [Validators.required]],
-      categoryId: ['', [Validators.required, Validators.maxLength(6)]],
+      price: [null, [Validators.required, Validators.min(0)]],
+      categoryId: [null, [Validators.required]],
       description: ['', [Validators.required]],
       imgUrl: ['', [Validators.required]],
     });
   }
+  
   ngOnInit(): void {
     this.addOrEditValue();
+    if (this.addOrEditVal === addOrEdit.edit && this.productToEdit) {
+      this.populateForm();
+    }
   }
 
   onSubmit() {
     if (this.myForm.valid) {
-      console.log('Form Submitted:', this.myForm.value);
+      if (this.addOrEditVal === addOrEdit.add) {
+        this.addProduct();
+      } else {
+        this.updateProduct();
+      }
     }
   }
 
-  showDialogSignal = signal<boolean>(false);
-  addOrEditSignal = signal<boolean>(false);
   addOrEditMessageSignal = signal<string>("");
 
-  showDialog(flag: boolean) {
-    this.showDialogSignal.set(flag);
-    return this.showDialogSignal.asReadonly();
+  resetForm() {
+    this.myForm.reset();
   }
 
   addOrEditValue() {
-    console.log(this.addOrEditVal);
-
-    if (this.addOrEditVal == 0) {
-      this.addOrEditMessageSignal.set(" הוסף מוצר");
+    if (this.addOrEditVal == addOrEdit.add) {
+      this.addOrEditMessageSignal.set("הוסף מוצר");
     }
-    if (this.addOrEditVal == 1) {
-      this.addOrEditMessageSignal.set(" ערוך מוצר");
+    if (this.addOrEditVal == addOrEdit.edit) {
+      this.addOrEditMessageSignal.set("ערוך מוצר");
     }
   }
 
-  addProduct(form: NgForm) {
-    const p: Product = new Product();
-    //p.Description = form.get("")
+  populateForm() {
+    if (this.productToEdit) {
+      this.myForm.patchValue({
+        productName: this.productToEdit.Product_name,
+        price: this.productToEdit.price,
+        categoryId: this.productToEdit.Category_Id,
+        description: this.productToEdit.description,
+        imgUrl: this.productToEdit.imageUrl
+      });
+    }
+  }
+
+  updateProduct() {
+    if (this.productToEdit) {
+      const updatedProduct: Product = {
+        ...this.productToEdit,
+        Product_name: this.myForm.get('productName')?.value,
+        price: this.myForm.get('price')?.value,
+        Category_Id: this.myForm.get('categoryId')?.value,
+        description: this.myForm.get('description')?.value,
+        imageUrl: this.myForm.get('imgUrl')?.value,
+        category: CATEGORIES[this.myForm.get('categoryId')?.value - 1]
+      };
+
+      this.productsService.updateProduct(updatedProduct);
+      this.myForm.reset();
+      alert("המוצר עודכן בהצלחה!");
+    }
+  }
+
+  addProduct() {
+    const newProduct: Product = new Product();
+    const products = this.productsService.getProducts()();
+    
+    newProduct.Products_id = products.length > 0 ? Math.max(...products.map(p => p.Products_id)) + 1 : 1;
+    newProduct.Product_name = this.myForm.get('productName')?.value;
+    newProduct.price = this.myForm.get('price')?.value;
+    newProduct.Category_Id = this.myForm.get('categoryId')?.value;
+    newProduct.description = this.myForm.get('description')?.value;
+    newProduct.imageUrl = this.myForm.get('imgUrl')?.value;
+    newProduct.category = CATEGORIES[newProduct.Category_Id - 1];
+
+    this.productsService.addProduct(newProduct);
+    this.myForm.reset();
+    alert("המוצר נוסף בהצלחה!");
   }
 }

@@ -14,6 +14,11 @@ import { BasketComponent } from './components/basket/basket.component';
 import { ProductPageComponent } from './components/product-page/product-page.component';
 import { CookComponent } from './components/cook/cook.component';
 import { PayComponent } from './components/pay/pay.component';
+import { LoginComponent } from './components/login/login.component';
+import { NewUserComponent } from './components/new-user/new-user.component';
+import { AuthComponent } from './components/auth/auth.component';
+import { ProductFormComponent } from './components/product-form/product-form.component';
+import { ProductEditComponent } from './components/product-edit/product-edit.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -30,5 +35,10 @@ export const routes: Routes = [
     { path: 'products-page/:id', component: ProductPageComponent },
     {path: 'cook', component: CookComponent},
     { path: 'pay', component: PayComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'new-user', component: NewUserComponent },
+    { path: 'auth', component: AuthComponent },
+    { path: 'product-form', component: ProductFormComponent},
+    { path: 'product-edit/:id', component: ProductEditComponent },
     { path: '**', redirectTo: '' }
 ];

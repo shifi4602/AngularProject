@@ -35,8 +35,19 @@ export class ProductsService {
   }
 
   addProduct(product: Product){
-    let productArr = this.productsSignal();
-    this.productsSignal().push(product);
+    const productArr = [...this.productsSignal(), product];
+    this.productsSignal.set(productArr);
+  }
+
+  updateProduct(product: Product){
+    const productArr = this.productsSignal().map(p => 
+      p.Products_id === product.Products_id ? product : p
+    );
+    this.productsSignal.set(productArr);
+  }
+
+  getProductById(id: number): Product | undefined {
+    return this.productsSignal().find(p => p.Products_id === id);
   }
 
   // Filter products by optional criteria.

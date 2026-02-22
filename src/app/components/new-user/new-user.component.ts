@@ -32,6 +32,7 @@ export class NewUserComponent {
 
     try {
       this.userService.addUser(newUser);
+      this.userService.setCurrentUser(newUser);
       console.log('User registered:', newUser);
 
       this.firstName = '';
