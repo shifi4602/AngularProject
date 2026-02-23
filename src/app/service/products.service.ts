@@ -26,6 +26,8 @@ export class ProductsService {
     this.loadProducts();
   }
 
+  private readonly baseUrl = environment.apiUrl.replace('/api', '');
+
   private mapDTO(dto: ProductDTO): Product {
     const p = new Product();
     p.Products_id = dto.id;
@@ -34,13 +36,25 @@ export class ProductsService {
     p.category_Id = dto.categoryId;
     p.category_name = dto.categoryName;
     p.description = dto.description;
-    p.imageUrl = dto.imageUrl;
+    const raw = dto.imageUrl;
+    if (!raw) {
+      p.imageUrl = '';
+    } else if (raw.startsWith('http')) {
+      // full URL (uploaded via UploadController)
+      p.imageUrl = raw;
+    } else if (raw.startsWith('assets/') || raw.startsWith('/assets/')) {
+      // Angular app asset — use as-is
+      p.imageUrl = raw.replace(/^\//, '');
+    } else {
+      // other relative path — prepend backend base URL
+      p.imageUrl = `${this.baseUrl}/${raw.replace(/^\//, '')}`;
+    }
     p.isAvailable = dto.isAvailable;
     return p;
   }
 
   private loadProducts() {
-    this.http.get<ProductDTO[]>(this.apiUrl).subscribe({
+    this.http.get<ProductDTO[]>(this.apiUrl, { params: { skip: 1000, position: 1 } }).subscribe({
       next: (dtos) => this.productsSignal.set(dtos.map(d => this.mapDTO(d))),
       error: (err) => console.error('Failed to load products', err)
     });

@@ -6,8 +6,6 @@ export class User {
     lastName!: string;
     email!: string;
     password!: string;
-    address?: string = '';
-    phoneNumber?: string = '';
     isAdmin: boolean = false;
     orders?: Order[] = [];
 }

@@ -1,42 +1,123 @@
-.allBranches{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+// ── Page wrapper ────────────────────────────────────────────────
+.branches-page {
+  min-height: calc(100vh - 180px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem 1rem 3rem;
+  box-sizing: border-box;
 }
 
-.branch-card{
-    width: 300px;
-    margin: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+// ── Page header card ─────────────────────────────────────────────
+.page-header {
+  width: min(100%, 480px);
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem 1.5rem 1.6rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
 
-    &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    }
+.header-image {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+}
 
-    img {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-    }
+h1 {
+  margin: 0;
+  color: #2a2a2a;
+  font-size: 1.65rem;
+}
 
-    .branch-info {
-        padding: 15px;
+.subtitle {
+  margin: 0.4rem 0 0;
+  color: #666;
+  font-size: 0.96rem;
+}
 
-        h3 {
-            margin: 0 0 10px;
-            font-size: 1.25rem;
-            color: #333;
-        }
+// ── Branches grid ────────────────────────────────────────────────
+.branches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
 
-        p {
-            margin: 5px 0;
-            color: #666;
-            font-size: 0.9rem;
-        }
-    }
+// ── Individual branch card ────────────────────────────────────────
+.branch-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.14);
+  }
+}
+
+.card-image-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0 0.5rem;
+  background: #faf9f7;
+  border-bottom: 1px solid #f0ece4;
+
+  img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    border-radius: 12px;
+  }
+}
+
+.card-body {
+  padding: 1.1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+
+  h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1.1rem;
+    color: #2a2a2a;
+    font-weight: 700;
+  }
+
+  .address {
+    margin: 0;
+    color: #444;
+    font-size: 0.9rem;
+  }
+
+  .detail {
+    margin: 0;
+    color: #686868;
+    font-size: 0.87rem;
+    line-height: 1.45;
+  }
+}
+
+// ── Responsive ────────────────────────────────────────────────────
+@media (max-width: 600px) {
+  .page-header {
+    padding: 1.4rem 1rem;
+    border-radius: 12px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
 }

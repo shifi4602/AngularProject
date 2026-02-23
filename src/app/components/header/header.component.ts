@@ -27,14 +27,14 @@ export class HeaderComponent {
   ngOnInit() {
     this.items = [
       { label: 'דף הבית', routerLink: '/' },
-      { label: 'בישול', routerLink: '/cook' },
-      { label: 'אפייה', routerLink: 'products' },
-      { label: 'אירוח והגשה', routerLink: 'hosting-and-srving' },
-      { label: 'אביזרי מטבח', routerLink: 'kitchen' },
-      { label: 'סכינים', routerLink: 'knifes' },
-      { label: 'מוצרי חשמל', routerLink: 'electric' },
-      { label: 'אחסון וארגון', routerLink: 'organization' },
-      { label: 'פחי אשפה', routerLink: 'garbige' },
+      { label: 'בישול', routerLink: '/cook'},
+      { label: 'אפייה', routerLink: '/products', queryParams: { categoryId: '3' } },
+      { label: 'אירוח והגשה', routerLink: '/hosting-and-srving' },
+      { label: 'אביזרי מטבח', routerLink: '/products' },
+      { label: 'סכינים', routerLink: '/products', queryParams: { categoryId: '9' } },
+      { label: 'מוצרי חשמל', routerLink: '/products', queryParams: { categoryId: '4' } },
+      { label: 'אחסון וארגון', routerLink: '/organization' },
+      { label: 'פחי אשפה', routerLink: '/products', queryParams: { categoryId: '5' } },
       { label: 'TO GO', routerLink: 'to-go' },
       { label: 'סניפים', routerLink: 'branches' }
     ];
