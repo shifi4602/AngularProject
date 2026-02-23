@@ -18,20 +18,22 @@ export class LoginComponent {
 
   private router = inject(Router);
   private userService = inject(UserService);
-  username: string = '';
   email: string = '';
-  
+  password: string = '';
+  errorMessage: string = '';
 
   login() {
-    const success = this.userService.loginUser(this.username, this.email);
-    if (success) {
-      console.log('Login successful');
-      // Optionally, navigate to another page or show a success message
-      alert('Login successful!');
-      this.router.navigate(['/']);
-    } else {
-      console.log('Login failed');
-      // Optionally, show an error message to the user
-    }
+    this.errorMessage = '';
+    this.userService.loginUser(this.email, this.password).subscribe({
+      next: (user) => {
+        console.log('Login successful', user);
+        alert('Login successful!');
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Login failed', err);
+        this.errorMessage = 'Invalid email or password.';
+      }
+    });
   }
 }

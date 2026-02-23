@@ -89,9 +89,16 @@ export class ProductFormComponent implements OnInit {
         category_name: CATEGORIES[this.myForm.get('categoryId')?.value - 1]
       };
 
-      this.productsService.updateProduct(updatedProduct);
-      this.myForm.reset();
-      alert("המוצר עודכן בהצלחה!");
+      this.productsService.updateProduct(updatedProduct).subscribe({
+        next: () => {
+          this.myForm.reset();
+          alert('המוצר עודכן בהצלחה!');
+        },
+        error: (err) => {
+          console.error('Update failed:', err);
+          alert('עדכון המוצר נכשל.');
+        }
+      });
     }
   }
 
@@ -108,8 +115,15 @@ export class ProductFormComponent implements OnInit {
     newProduct.category_name = CATEGORIES[newProduct.category_Id - 1];
     newProduct.isAvailable = true;
 
-    this.productsService.addProduct(newProduct);
-    this.myForm.reset();
-    alert("המוצר נוסף בהצלחה!");
+    this.productsService.addProduct(newProduct).subscribe({
+      next: () => {
+        this.myForm.reset();
+        alert('המוצר נוסף בהצלחה!');
+      },
+      error: (err) => {
+        console.error('Add product failed:', err);
+        alert('הוספת המוצר נכשלה.');
+      }
+    });
   }
 }

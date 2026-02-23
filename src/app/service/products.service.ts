@@ -1,31 +1,49 @@
 import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map, tap } from 'rxjs';
 import { Product } from '../models/products.model';
-import { CATEGORIES } from '../models/categories.const';
+import { environment } from '../../environments/environment';
+
+interface ProductDTO {
+  id: number;
+  categoryId: number;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  isAvailable: boolean;
+  categoryName: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
+  private readonly apiUrl = `${environment.apiUrl}/products`;
   private productsSignal = signal<Product[]>([]);
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.loadProducts();
   }
 
+  private mapDTO(dto: ProductDTO): Product {
+    const p = new Product();
+    p.Products_id = dto.id;
+    p.Product_name = dto.name;
+    p.price = dto.price;
+    p.category_Id = dto.categoryId;
+    p.category_name = dto.categoryName;
+    p.description = dto.description;
+    p.imageUrl = dto.imageUrl;
+    p.isAvailable = dto.isAvailable;
+    return p;
+  }
+
   private loadProducts() {
-    const dummyProducts: Product[] = Array.from({ length: 20 }, (_, i) => {
-      const categoryIndex = i % CATEGORIES.length;
-      return {
-        Products_id: i + 1,
-        Product_name: `מוצר ${i + 1}`,
-        price: Math.floor(Math.random() * 500) + 50,
-        category_Id: categoryIndex + 1,
-        description: `זהו תיאור קצר עבור מוצר מספר ${i + 1}`,
-        imageUrl: `assets/images/baking/3pattrns1.jpg`, // נתיב תמונה לדוגמה
-        category_name: CATEGORIES[categoryIndex]
-      } as Product;
+    this.http.get<ProductDTO[]>(this.apiUrl).subscribe({
+      next: (dtos) => this.productsSignal.set(dtos.map(d => this.mapDTO(d))),
+      error: (err) => console.error('Failed to load products', err)
     });
-    this.productsSignal.set(dummyProducts);
   }
 
 
@@ -34,16 +52,39 @@ export class ProductsService {
     return this.productsSignal.asReadonly();
   }
 
-  addProduct(product: Product){
-    const productArr = [...this.productsSignal(), product];
-    this.productsSignal.set(productArr);
+  addProduct(product: Product): Observable<Product> {
+    const body = {
+      id: product.Products_id,
+      categoryId: product.category_Id,
+      name: product.Product_name,
+      description: product.description,
+      price: product.price,
+      imageUrl: product.imageUrl,
+      isAvailable: product.isAvailable ?? true
+    };
+    return this.http.post<ProductDTO>(this.apiUrl, body).pipe(
+      map(dto => this.mapDTO(dto)),
+      tap(newProduct => this.productsSignal.update(list => [...list, newProduct]))
+    );
   }
 
-  updateProduct(product: Product){
-    const productArr = this.productsSignal().map(p => 
-      p.Products_id === product.Products_id ? product : p
+  updateProduct(product: Product): Observable<void> {
+    const body = {
+      id: product.Products_id,
+      categoryId: product.category_Id,
+      name: product.Product_name,
+      description: product.description,
+      price: product.price,
+      imageUrl: product.imageUrl,
+      isAvailable: product.isAvailable ?? true
+    };
+    return this.http.put<void>(`${this.apiUrl}/${product.Products_id}`, body).pipe(
+      tap(() => {
+        this.productsSignal.update(list =>
+          list.map(p => p.Products_id === product.Products_id ? product : p)
+        );
+      })
     );
-    this.productsSignal.set(productArr);
   }
 
   getProductById(id: number): Product | undefined {

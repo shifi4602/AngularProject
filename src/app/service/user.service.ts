@@ -1,38 +1,82 @@
 import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map, tap } from 'rxjs';
 import { User } from '../models/user.model';
 import { Order } from '../models/order.model';
+import { environment } from '../../environments/environment';
 
-import { ExistingUser } from '../models/existing-user.model';
+interface OrderItemDTO {
+  orderId: number;
+  productId: number;
+  quantity: number;
+  productName?: string;
+  productImageUrl?: string;
+  productPrice?: number;
+}
+
+interface OrderDTO {
+  id: number;
+  userId: number;
+  orderDate: string;
+  orderSum: number;
+  status: string;
+  orderItems: OrderItemDTO[];
+}
+
+interface UserDTO {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  phoneNumber: string;
+  isAdmin: boolean;
+  orders: OrderDTO[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class UserService {
+  private readonly apiUrl = `${environment.apiUrl}/users`;
   private usersSignal = signal<User[]>([]);
   private currentUserSignal = signal<User | null>(null);
 
-  constructor() {
-    this.loadDummyUsers();
-  }
+  constructor(private http: HttpClient) {}
 
-  private loadDummyUsers() {
-    const dummy: User[] = [
-      { userId: 1, firstName: 'Shlomo', lastName: 'Cohen', email: 'shlomo@example.com' , isAdmin: false, password: '1234', orders: []},
-      { userId: 2, firstName: 'Maya', lastName: 'Levi', email: 'maya@example.com' , isAdmin: false, password: '5678', orders: []}
-    ];
-    this.usersSignal.set(dummy);
-  }
-
-  private getNextUserId(): number {
-    const ids = this.usersSignal().map(user => user.userId ?? 0);
-    const maxId = ids.length ? Math.max(...ids) : 0;
-    return maxId + 1;
+  private mapDTO(dto: UserDTO): User {
+    return {
+      userId: dto.id,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      email: dto.email,
+      password: '',
+      isAdmin: dto.isAdmin,
+      orders: (dto.orders ?? []).map(o => ({
+        orderId: o.id,
+        orderSum: o.orderSum,
+        items: (o.orderItems ?? []).map(item => ({
+          orderId: item.orderId,
+          productId: item.productId,
+          quantity: item.quantity,
+          productName: item.productName ?? '',
+          productImageUrl: item.productImageUrl ?? '',
+          productPrice: item.productPrice ?? 0
+        })),
+        date: new Date(o.orderDate),
+        userId: o.userId,
+        status: o.status
+      }))
+    };
   }
 
   // Return read-only view of users
-  getUsers() {
-    return this.usersSignal.asReadonly();
+  getUsers(): Observable<User[]> {
+    return this.http.get<UserDTO[]>(this.apiUrl).pipe(
+      map(dtos => dtos.map(d => this.mapDTO(d))),
+      tap(users => this.usersSignal.set(users))
+    );
   }
 
   getCurrentUser() {
@@ -40,32 +84,37 @@ export class UserService {
   }
 
   // Find a user by id
-   getUserById(id: number): User | undefined {
-     return this.usersSignal().find(u => u.userId === id);
-   }
+  getUserById(id: number): Observable<User> {
+    return this.http.get<UserDTO>(`${this.apiUrl}/${id}`).pipe(
+      map(dto => this.mapDTO(dto))
+    );
+  }
 
-  // Add a new user
-  addUser(user: User): void {
-    if (!user.userId || user.userId <= 0) {
-      user.userId = this.getNextUserId();
-    }
+  // Register a new user
+  addUser(user: User): Observable<User> {
+    const body = {
+      id: 0,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      address: (user as any).address ?? '',
+      phoneNumber: (user as any).phoneNumber ?? '',
+      password: user.password
+    };
+    return this.http.post<UserDTO>(this.apiUrl, body).pipe(
+      map(dto => this.mapDTO(dto))
+    );
+  }
 
-    if (!user.orders) {
-      user.orders = [];
-    }
-
-    this.usersSignal.update(list => [...list, user]);
+  // Login with email and password
+  loginUser(email: string, password: string): Observable<User> {
+    return this.http.post<UserDTO>(`${this.apiUrl}/login`, { email, password }).pipe(
+      map(dto => this.mapDTO(dto)),
+      tap(user => this.currentUserSignal.set(user))
+    );
   }
 
   addOrderToUser(userId: number, order: Order): void {
-    this.usersSignal.update(users =>
-      users.map(user =>
-        user.userId === userId
-          ? { ...user, orders: [...(user.orders ?? []), order] }
-          : user
-      )
-    );
-
     const current = this.currentUserSignal();
     if (current?.userId === userId) {
       this.currentUserSignal.set({ ...current, orders: [...(current.orders ?? []), order] });
@@ -75,12 +124,5 @@ export class UserService {
   setCurrentUser(user: User | null): void {
     this.currentUserSignal.set(user);
   }
-
-  // Login by matching an existing user object (firstName + email)
-  // Returns the matched User or null if not found
-  loginUser(username: string, email: string): User | null {
-    const user = this.usersSignal().find(u => u.firstName === username && u.email === email);
-    this.currentUserSignal.set(user ?? null);
-    return user ?? null;
-  }
 }
+

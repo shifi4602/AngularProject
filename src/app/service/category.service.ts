@@ -1,23 +1,31 @@
 import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Category } from '../models/category.model';
+import { environment } from '../../environments/environment';
+
+interface CategoryDTO {
+  id: number;
+  name: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
+  private readonly apiUrl = `${environment.apiUrl}/categories`;
   private categoriesSignal = signal<Category[]>([]);
 
-  constructor() {
-    this.loadDummyCategories();
+  constructor(private http: HttpClient) {
+    this.loadCategories();
   }
 
-  private loadDummyCategories() {
-    const dummy: Category[] = [
-      { Category_Id: 1, Category_name: 'Baking' },
-      { Category_Id: 2, Category_name: 'Electric' },
-      { Category_Id: 3, Category_name: 'Knives' }
-    ];
-    this.categoriesSignal.set(dummy);
+  private loadCategories() {
+    this.http.get<CategoryDTO[]>(this.apiUrl).subscribe({
+      next: (dtos) => this.categoriesSignal.set(
+        dtos.map(d => ({ Category_Id: d.id, Category_name: d.name }))
+      ),
+      error: (err) => console.error('Failed to load categories', err)
+    });
   }
 
   // Return a read-only view of all categories

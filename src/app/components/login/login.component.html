@@ -5,13 +5,15 @@
         </ng-template>
 
         <form (ngSubmit)="login()" class="fields">
-            <label for="username">Username</label>
-            <input pInputText type="text" id="username" [(ngModel)]="username" name="username"
-                placeholder="Enter your username" required />
-
             <label for="email">Email</label>
             <input pInputText type="email" id="email" [(ngModel)]="email" name="email"
                 placeholder="Enter your email" required />
+
+            <label for="password">Password</label>
+            <input pInputText type="password" id="password" [(ngModel)]="password" name="password"
+                placeholder="Enter your password" required />
+
+            <p *ngIf="errorMessage" style="color:red">{{ errorMessage }}</p>
 
             <div class="actions">
                 <button pButton type="submit" label="Login" class="p-button-success"></button>

@@ -1,62 +1,95 @@
 import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map, tap } from 'rxjs';
 import { Order } from '../models/order.model';
 import { UserService } from './user.service';
+import { environment } from '../../environments/environment';
+
+interface OrderItemDTO {
+  orderId: number;
+  productId: number;
+  quantity: number;
+  productName?: string;
+  productImageUrl?: string;
+  productPrice?: number;
+}
+
+interface OrderDTO {
+  id: number;
+  userId: number;
+  orderDate: string;
+  orderSum: number;
+  status: string;
+  orderItems: OrderItemDTO[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
+  private readonly apiUrl = `${environment.apiUrl}/orders`;
   private ordersSignal = signal<Order[]>([]);
 
-  constructor(private userService: UserService) {
-    this.loadDummyOrders();
+  constructor(private http: HttpClient, private userService: UserService) {}
+
+  private mapDTO(dto: OrderDTO): Order {
+    return {
+      orderId: dto.id,
+      orderSum: dto.orderSum,
+      items: (dto.orderItems ?? []).map(item => ({
+        orderId: item.orderId,
+        productId: item.productId,
+        quantity: item.quantity,
+        productName: item.productName ?? '',
+        productImageUrl: item.productImageUrl ?? '',
+        productPrice: item.productPrice ?? 0
+      })),
+      date: new Date(dto.orderDate),
+      userId: dto.userId,
+      status: dto.status
+    };
   }
 
-  private getNextOrderId(): number {
-    const ids = this.ordersSignal().map(order => order.orderId ?? 0);
-    const maxId = ids.length ? Math.max(...ids) : 0;
-    return maxId + 1;
-  }
-
-  private loadDummyOrders() {
-    const dummy: Order[] = [
-      { orderId: 1, orderSum: 120, items: [], date: new Date(), userId: 1 },
-      { orderId: 2, orderSum: 250, items: [], date: new Date(), userId: 2 }
-    ];
-    this.ordersSignal.set(dummy);
-  }
-
-  // Readonly view
+  // Readonly view of locally cached orders
   getOrders() {
     return this.ordersSignal.asReadonly();
   }
 
-  // Find order by id
+  // Find order by id (from cache)
   getOrderById(id: number): Order | undefined {
     return this.ordersSignal().find(o => o.orderId === id);
   }
 
-  // Add a new order
-  addOrder(order: Order): void {
+  // Add a new order via the API
+  addOrder(order: Order): Observable<Order> {
     const currentUser = this.userService.getCurrentUser()();
-
     if (!currentUser) {
       throw new Error('User must be logged in to place an order.');
     }
 
-    if (!currentUser.userId || currentUser.userId <= 0) {
-      throw new Error('Current user has an invalid user ID.');
-    }
-
-    const newOrder: Order = {
-      ...order,
-      orderId: order.orderId && order.orderId > 0 ? order.orderId : this.getNextOrderId(),
-      userId: currentUser.userId,
-      date: order.date ? new Date(order.date) : new Date(),
-      status: order.status || 'Placed'
+    const body: OrderDTO = {
+      id: 0,
+      userId: currentUser.userId ?? 0,
+      orderDate: new Date().toISOString().split('T')[0],
+      orderSum: order.orderSum,
+      status: order.status || 'Placed',
+      orderItems: order.items.map(item => ({
+        orderId: 0,
+        productId: item.productId,
+        quantity: item.quantity,
+        productName: item.productName,
+        productImageUrl: item.productImageUrl,
+        productPrice: item.productPrice
+      }))
     };
 
-    this.ordersSignal.update(list => [...list, newOrder]);
-    this.userService.addOrderToUser(currentUser.userId, newOrder);
+    return this.http.post<OrderDTO>(this.apiUrl, body).pipe(
+      map(dto => this.mapDTO(dto)),
+      tap(newOrder => {
+        this.ordersSignal.update(list => [...list, newOrder]);
+        this.userService.addOrderToUser(newOrder.userId, newOrder);
+      })
+    );
   }
 }
+

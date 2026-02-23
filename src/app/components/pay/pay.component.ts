@@ -7,6 +7,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { BasketServiceService } from '../../service/basket-service.service';
+import { OrderService } from '../../service/order.service';
+import { UserService } from '../../service/user.service';
+import { Order } from '../../models/order.model';
 
 @Component({
   selector: 'app-pay',
@@ -17,6 +20,8 @@ import { BasketServiceService } from '../../service/basket-service.service';
 })
 export class PayComponent implements OnInit {
   private basketService = inject(BasketServiceService);
+  private orderService = inject(OrderService);
+  private userService = inject(UserService);
   private router = inject(Router);
   cardNumber = '';
   expiryMonth = '';
@@ -72,19 +77,58 @@ export class PayComponent implements OnInit {
       return;
     }
 
-    // Simulate payment success
-    alert('Payment successful — ' + this.total.toFixed(2));
-    this.basketService.clearBasket();
-    this.cardNumber = '';
-    this.expiryMonth = '';
-    this.expiryYear = '';
-    this.cvv = '';
-    this.streetAddress = '';
-    this.city = '';
-    this.postalCode = '';
-    this.total = 0;
-    
-    // Navigate to home page
-    this.router.navigate(['/home']);
+    const currentUser = this.userService.getCurrentUser()();
+    if (!currentUser) {
+      alert('Please login before placing an order');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const basketItems = this.basketService.getItems();
+    if (basketItems.length === 0) {
+      alert('Your basket is empty');
+      return;
+    }
+
+    const order: Order = {
+      orderId: 0,
+      orderSum: this.basketService.getTotalPrice(),
+      items: basketItems.map(item => ({
+        orderId: 0,
+        productId: item.Products_id,
+        quantity: item.quantity || 1,
+        productName: item.Product_name,
+        productImageUrl: item.imageUrl,
+        productPrice: item.price
+      })),
+      date: new Date(),
+      userId: currentUser.userId ?? 0,
+      status: 'Placed'
+    };
+
+    try {
+      this.orderService.addOrder(order).subscribe({
+        next: () => {
+          alert('Payment successful — ' + this.total.toFixed(2));
+          this.basketService.clearBasket();
+          this.cardNumber = '';
+          this.expiryMonth = '';
+          this.expiryYear = '';
+          this.cvv = '';
+          this.streetAddress = '';
+          this.city = '';
+          this.postalCode = '';
+          this.total = 0;
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          console.error('Order failed:', err);
+          alert('Order placement failed. Please try again.');
+        }
+      });
+    } catch (error) {
+      alert('Unable to place order. Please login again.');
+      return;
+    }
   }
 }

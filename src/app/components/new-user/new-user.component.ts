@@ -35,21 +35,22 @@ export class NewUserComponent {
       orders: []
     };
 
-    try {
-      this.userService.addUser(newUser);
-      this.userService.setCurrentUser(newUser);
-      console.log('User registered:', newUser);
-
-      this.firstName = '';
-      this.lastName = '';
-      this.email = '';
-      this.isAdmin = false;
-
-      alert('Registration successful!');
-      this.router.navigate(['/']);
-    } catch (error) {
-      console.error('Registration failed:', error);
-    }
-    
+    this.userService.addUser(newUser).subscribe({
+      next: (registeredUser) => {
+        this.userService.setCurrentUser(registeredUser);
+        console.log('User registered:', registeredUser);
+        this.firstName = '';
+        this.lastName = '';
+        this.email = '';
+        this.isAdmin = false;
+        this.password = '';
+        alert('Registration successful!');
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Registration failed:', err);
+        alert(err?.error ?? 'Registration failed. Please try again.');
+      }
+    });
   }
 }
