@@ -35,7 +35,7 @@ export class HeaderComponent {
       { label: 'מוצרי חשמל', routerLink: '/products', queryParams: { categoryId: '4' } },
       { label: 'אחסון וארגון', routerLink: '/organization' },
       { label: 'פחי אשפה', routerLink: '/products', queryParams: { categoryId: '5' } },
-      { label: 'TO GO', routerLink: 'to-go' },
+      { label: 'TO GO', routerLink: '/products', queryParams: { categoryId: '6' } },
       { label: 'סניפים', routerLink: 'branches' }
     ];
   }

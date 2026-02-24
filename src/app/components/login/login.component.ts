@@ -28,7 +28,11 @@ export class LoginComponent {
       next: (user) => {
         console.log('Login successful', user);
         alert('Login successful!');
-        this.router.navigate(['/']);
+        if (user.isAdmin) {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/']);
+        }
       },
       error: (err) => {
         console.error('Login failed', err);

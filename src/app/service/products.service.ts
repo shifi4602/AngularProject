@@ -68,7 +68,7 @@ export class ProductsService {
 
   addProduct(product: Product): Observable<Product> {
     const body = {
-      id: product.Products_id,
+      id: 0,
       categoryId: product.category_Id,
       name: product.Product_name,
       description: product.description,
@@ -103,6 +103,12 @@ export class ProductsService {
 
   getProductById(id: number): Product | undefined {
     return this.productsSignal().find(p => p.Products_id === id);
+  }
+
+  fetchProductById(id: number): Observable<Product> {
+    return this.http.get<ProductDTO>(`${this.apiUrl}/${id}`).pipe(
+      map(dto => this.mapDTO(dto))
+    );
   }
 
   // Filter products by optional criteria.

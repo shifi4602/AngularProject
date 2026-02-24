@@ -1,5 +1,5 @@
 <div *ngIf="product; else notFound">
-    <app-product-form [addOrEditVal]="editMode" [productToEdit]="product"></app-product-form>
+    <app-product-form [addOrEditVal]="editMode" [productToEdit]="product" (saved)="onSaved()"></app-product-form>
 </div>
 
 <ng-template #notFound>

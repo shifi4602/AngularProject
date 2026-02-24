@@ -4,7 +4,7 @@ import { ProductFormComponent } from '../product-form/product-form.component';
 import { Product } from '../../models/products.model';
 import { ProductsService } from '../../service/products.service';
 import { addOrEdit } from '../../models/addOrEditEnum.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-edit',
@@ -20,11 +20,11 @@ export class ProductEditComponent implements OnInit {
 
   constructor(
     private productsService: ProductsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    // Try to get product ID from route params if not passed as input
     if (!this.productId) {
       const id = this.route.snapshot.paramMap.get('id');
       if (id) {
@@ -32,9 +32,16 @@ export class ProductEditComponent implements OnInit {
       }
     }
 
-    // Load the product
     if (this.productId) {
-      this.product = this.productsService.getProductById(this.productId);
+      this.productsService.fetchProductById(this.productId).subscribe({
+        next: (p) => this.product = p,
+        error: () => this.product = undefined
+      });
     }
   }
+
+  onSaved(): void {
+    this.router.navigate(['/admin']);
+  }
 }
+
