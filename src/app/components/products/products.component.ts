@@ -12,6 +12,7 @@ import { Product } from '../../models/products.model';
 import { FilterComponent } from './filter/filter.component';
 import { CATEGORIES } from '../../models/categories.const';
 import { CategoryService } from '../../service/category.service';
+import { UserService } from '../../service/user.service';
 
 
 
@@ -28,7 +29,10 @@ export class ProductsComponent implements OnInit {
   private basketService = inject(BasketServiceService);
   private route = inject(ActivatedRoute);
   private categoryService = inject(CategoryService);
+  private userService = inject(UserService);
   addOrEditVal: addOrEdit = 0;
+
+  currentUser = this.userService.getCurrentUser();
 
   allProducts = this.productService.getProducts();
   filteredProducts: Product[] = [];
@@ -41,7 +45,11 @@ export class ProductsComponent implements OnInit {
   constructor() {
     // Re-filter when products load from API
     effect(() => {
-      const products = this.allProducts();
+      const products = this.allProducts().filter(p =>
+        p.isAvailable === true &&
+        p.Product_name != null && p.Product_name.trim() !== '' &&
+        p.price != null && p.price > 0
+      );
       if (!this.activeFilter) {
         this.filteredProducts = [...products];
       } else {
@@ -66,7 +74,10 @@ export class ProductsComponent implements OnInit {
       if (categoryIdParam) {
         this.urlCategoryIds = categoryIdParam.split(',').map((id: string) => +id.trim());
         this.activeFilter = { categoryIds: this.urlCategoryIds };
-        this.filteredProducts = this.filterProducts(this.allProducts(), this.activeFilter);
+        this.filteredProducts = this.filterProducts(
+          this.allProducts().filter(p => p.isAvailable && p.Product_name?.trim() && p.price),
+          this.activeFilter
+        );
       } else {
         this.urlCategoryIds = [];
         this.urlCategories = [];
@@ -87,6 +98,8 @@ export class ProductsComponent implements OnInit {
     const categoryIds: number[] = filter.categoryIds || [];
 
     return products.filter(product => {
+      if (product.isAvailable !== true || product.Product_name == null || product.Product_name.trim() === '' || product.price == null || product.price <= 0) return false;
+
       const productName = (product.Product_name || '').toLowerCase();
       const productDescription = (product.description || '').toLowerCase();
       const productCategoryName = product.category_name || CATEGORIES[(product.category_Id ?? 1) - 1];
@@ -99,7 +112,7 @@ export class ProductsComponent implements OnInit {
         matchesCategoryNames &&
         (searchName === '' || productName.includes(searchName)) &&
         (searchDescription === '' || productDescription.includes(searchDescription)) &&
-        (filter.maxPrice == null || product.price <= filter.maxPrice)
+        (filter.maxPrice == null || filter.maxPrice >= 1000 || product.price <= filter.maxPrice)
       );
     });
   }
@@ -108,11 +121,17 @@ export class ProductsComponent implements OnInit {
     // Always merge the locked URL category IDs into the sidebar filter
     const mergedFilter = { ...filter, categoryIds: this.urlCategoryIds };
 
+    // If ALL backend categories are selected, treat it the same as "no category filter"
+    const allCats = this.categoriesSignal();
+    if (allCats.length > 0 && mergedFilter.categories?.length >= allCats.length) {
+      mergedFilter.categories = [];
+    }
+
     const isEmpty =
       !filter.name &&
       !filter.description &&
-      (!filter.categories || filter.categories.length === 0) &&
-      (filter.maxPrice === undefined || filter.maxPrice === 250);
+      (!mergedFilter.categories || mergedFilter.categories.length === 0) &&
+      (filter.maxPrice === undefined || filter.maxPrice >= 1000);
 
     if (isEmpty && this.urlCategoryIds.length === 0) {
       this.resetProducts();
@@ -125,13 +144,17 @@ export class ProductsComponent implements OnInit {
 
 
   resetProducts() {
-    // If we navigated from a category, reset back to that category only
+    const available = this.allProducts().filter(p =>
+      p.isAvailable === true &&
+      p.Product_name != null && p.Product_name.trim() !== '' &&
+      p.price != null && p.price > 0
+    );
     if (this.urlCategoryIds.length > 0) {
       this.activeFilter = { categoryIds: this.urlCategoryIds };
-      this.filteredProducts = this.filterProducts(this.allProducts(), this.activeFilter);
+      this.filteredProducts = this.filterProducts(available, this.activeFilter);
     } else {
       this.activeFilter = null;
-      this.filteredProducts = [...this.allProducts()];
+      this.filteredProducts = [...available];
     }
   }
 
@@ -141,6 +164,17 @@ export class ProductsComponent implements OnInit {
     this.basketService.addProductTBasket(product);
     // optional: simple feedback
     console.log('added to basket', product.Product_name);
+  }
+
+  getImageUrl(product: Product): string {
+    const url = product.imageUrl?.trim();
+    return url ? url : 'https://placehold.co/300x200?text=No+Image';
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = 'https://placehold.co/300x200?text=No+Image';
+    img.onerror = null; // prevent infinite loop
   }
 
   private router = inject(Router);

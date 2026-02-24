@@ -5,6 +5,9 @@
     font-family: 'Segoe UI', sans-serif;
 }
 
+.try{
+    padding-top: 20vh;
+}
 .admin-header {
     display: flex;
     align-items: center;
@@ -28,17 +31,17 @@
 
 .tab-btn {
     padding: 8px 22px;
-    border: 2px solid #f58220;
+    border: 2px solid #b7a27a;
     border-radius: 8px;
     background: #fff;
-    color: #f58220;
+    color: #b7a27a;
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
 
     &.active, &:hover {
-        background: #f58220;
+        background: #b7a27a;
         color: #fff;
     }
 }
@@ -60,7 +63,7 @@
     font-size: 0.95rem;
 
     thead tr {
-        background: #f58220;
+        background: #b7a27a;
         color: #fff;
     }
 
@@ -77,7 +80,7 @@
 
 .edit-btn {
     padding: 6px 18px;
-    background: #f58220;
+    background: #b7a27a;
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -86,6 +89,6 @@
     transition: background 0.2s;
 
     &:hover {
-        background: #d96e10;
+        background: #b7a27a;
     }
 }

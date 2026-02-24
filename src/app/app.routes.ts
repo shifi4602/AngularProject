@@ -17,6 +17,7 @@ import { AuthComponent } from './components/auth/auth.component';
 import { ProductFormComponent } from './components/product-form/product-form.component';
 import { ProductEditComponent } from './components/product-edit/product-edit.component';
 import { AdminComponent } from './components/admin/admin.component';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -34,7 +35,7 @@ export const routes: Routes = [
     { path: 'new-user', component: NewUserComponent },
     { path: 'auth', component: AuthComponent },
     { path: 'product-form', component: ProductFormComponent},
-    { path: 'product-edit/:id', component: ProductEditComponent },
-    { path: 'admin', component: AdminComponent },
+    { path: 'product-edit/:id', component: ProductEditComponent, canActivate: [adminGuard] },
+    { path: 'admin', component: AdminComponent, canActivate: [adminGuard] },
     { path: '**', redirectTo: '' }
 ];

@@ -34,7 +34,7 @@ export class FilterComponent {
     this.filterForm = this.fb.group({
       name: [''],
       description: [''],
-      maxPrice: [250],
+      maxPrice: [1000],
       categories: this.fb.array([])
     });
 
@@ -83,12 +83,13 @@ export class FilterComponent {
     this.filterForm.reset({
       name: '',
       description: '',
-      maxPrice: 250,
+      maxPrice: 1000,
     });
     // Re-check all categories
     const arr = this.categoriesFormArray;
     arr.clear();
     this.categoriesList().forEach(c => arr.push(this.fb.control(c.Category_name)));
+    this.filterForm.get('maxPrice')?.setValue(1000, { emitEvent: false });
     this.suppressEmitCount = 0; // drain any remaining, then emit manually
     this.filterChanged.emit(this.filterForm.value);
   }

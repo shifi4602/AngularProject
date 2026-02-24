@@ -8,9 +8,9 @@
         <label>לפי מחיר:</label>
         <div class="price-range">
             <span>₪0</span>
-            <span>₪{{ filterForm.value.maxPrice }}</span>
+            <span>{{ filterForm.value.maxPrice >= 1000 ? 'הכל' : '₪' + filterForm.value.maxPrice }}</span>
         </div>
-        <input type="range" min="0" max="1000" formControlName="maxPrice" (change)="apply()" />
+        <input type="range" min="0" max="1000" step="10" formControlName="maxPrice" (change)="apply()" />
     </div>
 
     <div class="divider"></div>

@@ -15,10 +15,7 @@
         <span class="p-input-icon-left">
           <a routerLink="/auth"><div class="auth">לחיבור / הרשמה</div></a>
           <div class="user-name" *ngIf="currentUser() as user">שלום, {{ user.firstName }} {{ user.lastName }}</div>
-          <!--<i class="pi pi-search"></i>-->
-          <!--<input type="text" pInputText placeholder="הכנס מילות חיפוש" />-->
-          <!-- <div class="ttt"><a routerLink="/product-form">add product</a></div>
-          <a routerLink="/product-edit/5">edit product</a> -->
+          <a *ngIf="currentUser()?.isAdmin" routerLink="/admin" class="admin-link">ניהול</a>
         </span>
       </div>
     </div>

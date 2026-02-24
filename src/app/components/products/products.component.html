@@ -11,8 +11,8 @@
                 <p-card class="product-grid-card" (click)="goToProduct(product)">
                     <ng-template pTemplate="header">
                         <a [routerLink]="['/products-page', product.Products_id]" [state]="{ product: product }">
-                            <img [src]="product.imageUrl || 'https://placehold.co/300x200?text=No+Image'"
-                                 (error)="$any($event.target).src='https://placehold.co/300x200?text=No+Image'"
+                            <img [src]="getImageUrl(product)"
+                                 (error)="onImageError($event)"
                                  class="card-img-top" [alt]="product.Product_name">
                         </a>
                     </ng-template>
@@ -22,7 +22,9 @@
                         <div class="flex gap-4 mt-1 m-2">
                             <a [routerLink]="['/basket']"><p-button label="הוספה לסל" severity="secondary" class="w-full" [outlined]="true"
                                 styleClass="w-full" (onClick)="addToBasket(product)"/></a>
-                            <!-- <p-button class="btn" styleClass="btn" label="לרכישה" class="w-full" styleClass="w-full"/> -->
+                            <a *ngIf="currentUser()?.isAdmin" [routerLink]="['/product-edit', product.Products_id]">
+                                <p-button label="עריכה" severity="warn" [outlined]="true" styleClass="w-full" (click)="$event.stopPropagation()"/>
+                            </a>
                         </div>
                     </ng-template>
                 </p-card>
