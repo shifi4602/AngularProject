@@ -168,12 +168,14 @@ export class ProductsComponent implements OnInit {
 
   getImageUrl(product: Product): string {
     const url = product.imageUrl?.trim();
-    return url ? url : 'https://placehold.co/300x200?text=No+Image';
+    return url ? url : 'assets/no-image.svg';
   }
 
   onImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
-    img.src = 'https://placehold.co/300x200?text=No+Image';
+    if (img.src !== window.location.origin + '/assets/no-image.svg') {
+      img.src = 'assets/no-image.svg';
+    }
     img.onerror = null; // prevent infinite loop
   }
 

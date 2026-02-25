@@ -3,7 +3,7 @@
     <div class="top-bar">
       <div class="icons-section">
         <i class="pi pi-heart" pBadge severity="secondary"></i>
-        <a routerLink="/basket"><i class="pi pi-shopping-cart" pBadge severity="secondary"></i></a>
+        <i class="pi pi-shopping-cart" pBadge severity="secondary" routerLink="/basket"></i>
         <i class="pi pi-user" pBadge severity="secondary"></i>
       </div>
 
@@ -13,7 +13,7 @@
 
       <div class="search-section">
         <span class="p-input-icon-left">
-          <a routerLink="/auth"><div class="auth">לחיבור / הרשמה</div></a>
+          <div class="auth" routerLink="/auth">לחיבור / הרשמה</div>
           <div class="user-name" *ngIf="currentUser() as user">שלום, {{ user.firstName }} {{ user.lastName }}</div>
           <a *ngIf="currentUser()?.isAdmin" routerLink="/admin" class="admin-link">ניהול</a>
         </span>

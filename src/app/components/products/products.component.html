@@ -16,15 +16,18 @@
                                  class="card-img-top" [alt]="product.Product_name">
                         </a>
                     </ng-template>
+                    <div class="id">{{ product.Products_id }}</div>
                     <ng-template pTemplate="title">{{ product.Product_name }}</ng-template>
                     <ng-template pTemplate="subtitle"> ₪ {{ product.price }} </ng-template>
                     <ng-template pTemplate="footer">
-                        <div class="flex gap-4 mt-1 m-2">
-                            <a [routerLink]="['/basket']"><p-button label="הוספה לסל" severity="secondary" class="w-full" [outlined]="true"
-                                styleClass="w-full" (onClick)="addToBasket(product)"/></a>
-                            <a *ngIf="currentUser()?.isAdmin" [routerLink]="['/product-edit', product.Products_id]">
-                                <p-button label="עריכה" severity="warn" [outlined]="true" styleClass="w-full" (click)="$event.stopPropagation()"/>
+                        <div class="d-flex gap-2 mt-1 m-2">
+                            <a [routerLink]="['/basket']" class="flex-fill">
+                                <p-button label="הוספה לסל" severity="secondary" [outlined]="true"
+                                    styleClass="w-full" (onClick)="addToBasket(product)"/>
                             </a>
+                            <!-- <a *ngIf="currentUser()?.isAdmin" [routerLink]="['/product-edit', product.Products_id]" class="flex-fill" (click)="$event.stopPropagation()">
+                                <p-button label="עריכה" severity="warn" [outlined]="true" styleClass="w-full"/>
+                            </a> -->
                         </div>
                     </ng-template>
                 </p-card>
